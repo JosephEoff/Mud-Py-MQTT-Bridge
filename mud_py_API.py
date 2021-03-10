@@ -67,6 +67,15 @@ def _getUnitForNodeDataType(dataType):
         
     return dUnit
 
+def getSensorIDsForNode(nodeID):
+    node = _getControlNode(nodeID)
+    sensorIDs=[]
+    sensors = list(node.assignedsensors.all())
+    for sensor in sensors:
+        sensorIDs.append(sensor.sensorID)
+        
+    return ';'.join(sensorIDs)
+
 def updateSensorData(id,dataType, value):
     dtype = _getSensorDataType(dataType)
     sensor = _getSensor(id)

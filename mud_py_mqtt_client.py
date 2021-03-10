@@ -13,6 +13,7 @@ sensorSubscription = 'sensor/+/+'
 nodeBattery = 'battery'
 nodeDone = 'done'
 nodeSleep = 'sleep'
+nodeSensors = 'sensors'
 
 
 def on_message(client, userdata, message):
@@ -26,6 +27,9 @@ def on_node_message(client, userdata, message):
     
     if fields.DataType == nodeBattery:
         MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
+        sensorIDs = MudPy.getSensorIDsForNode(fields.ID)
+        if len(sensorIDs)>0:
+            client.publish('node/' + fields.ID + '/' + nodeSensors,sensorIDs)
     #Nodes will always send a battery message before a nodeDone, so there's no need to create the node in the database
     if fields.DataType == nodeDone:        
         client.publish('node/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour())
