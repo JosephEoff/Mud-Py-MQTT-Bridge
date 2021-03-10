@@ -1,3 +1,4 @@
 [submodule "mud_py"]
 	path = mud_py
 	url = https://github.com/JosephEoff/Mud-Py.git
+	branch = main
