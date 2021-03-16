@@ -8,4 +8,4 @@ sensorvalue = sys.argv[3]
 broker_address="192.168.0.2" 
 client = mqtt.Client("MudPySensorSimulator") #create new instance
 client.connect(broker_address) #connect to broker
-client.publish('sensor/' + sensorid + '/' + sensorvaluetype, sensorvalue)#publish
+client.publish('mud-py-flora/' + sensorid + '/' + sensorvaluetype, sensorvalue)#publish

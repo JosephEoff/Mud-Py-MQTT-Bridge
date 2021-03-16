@@ -8,8 +8,8 @@ import datetime
 topicFieldSeparator = '/'
 broker_address="192.168.0.2" #Address needs to be a configuration setting.
 
-nodeSubscription = 'node/+/+'
-sensorSubscription = 'sensor/+/+'
+nodeSubscription = 'mud-py-node/+/+'
+sensorSubscription = 'mud-py-flora/+/+'
 nodeBattery = 'battery'
 nodeDone = 'done'
 nodeSleep = 'sleep'
