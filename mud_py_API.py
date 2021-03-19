@@ -74,7 +74,7 @@ def getSensorIDsForNode(nodeID):
     for sensor in sensors:
         sensorIDs.append(sensor.sensorID)
         
-    return ';'.join(sensorIDs)
+    return sensorIDs
 
 def updateSensorData(id,dataType, value):
     dtype = _getSensorDataType(dataType)

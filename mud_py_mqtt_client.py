@@ -13,7 +13,8 @@ sensorSubscription = 'mud-py-flora/+/+'
 nodeBattery = 'battery'
 nodeDone = 'done'
 nodeSleep = 'sleep'
-nodeSensors = 'sensors'
+nodeSensor = 'sensorID'
+node = 'mud-py-node'
 
 
 def on_message(client, userdata, message):
@@ -28,11 +29,11 @@ def on_node_message(client, userdata, message):
     if fields.DataType == nodeBattery:
         MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
         sensorIDs = MudPy.getSensorIDsForNode(fields.ID)
-        if len(sensorIDs)>0:
-            client.publish('node/' + fields.ID + '/' + nodeSensors,sensorIDs)
+        for ID in sensorIDs:
+            client.publish(node +'/' + fields.ID + '/' + nodeSensor,ID)
     #Nodes will always send a battery message before a nodeDone, so there's no need to create the node in the database
     if fields.DataType == nodeDone:        
-        client.publish('node/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour())
+        client.publish(node + '/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour())
         
 def _getSecondsToNextHour():
     delta = datetime.timedelta(hours=1)
@@ -43,7 +44,7 @@ def _getSecondsToNextHour():
     
 def on_sensor_message(client, userdata, message):
     fields = splitTopicToFields(message.topic)
-    MudPy.updateSensorData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
+    MudPy.updateSensorData(fields.ID.upper(), fields.DataType, str(message.payload.decode("utf-8")))
     
 
 def splitTopicToFields(topic):
