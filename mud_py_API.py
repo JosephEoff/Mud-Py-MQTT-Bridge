@@ -124,6 +124,9 @@ def _getUnitForSensorDataType(dataType):
     if dataType == 'conductivity':
         dUnitName ='microsiemens per centimeter'
         dUnitSymbol = 'µS/cm'
+    if dataType == 'readtries':
+        dUnitName ='count'
+        dUnitSymbol = 'ct'
     
     dUnit = None
     
