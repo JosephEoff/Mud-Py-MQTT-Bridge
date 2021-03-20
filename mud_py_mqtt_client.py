@@ -38,7 +38,7 @@ def on_node_message(client, userdata, message):
 def _getSecondsToNextHour():
     delta = datetime.timedelta(hours=1)
     now = datetime.datetime.now()
-    next_hour = (now + delta).replace(microsecond=0, second=0, minute=0)
+    next_hour = (now + delta).replace(microsecond=0, second=0, minute=30)
 
     return (next_hour - now).seconds   
     
