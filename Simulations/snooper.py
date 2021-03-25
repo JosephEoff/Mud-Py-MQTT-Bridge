@@ -2,6 +2,9 @@
 
 import paho.mqtt.client as mqtt #import the client1
 import time
+import local_settings as cfg
+
+broker_address=cfg.broker_address
 
 ############
 def on_message(client, userdata, message):
@@ -12,7 +15,6 @@ def on_message(client, userdata, message):
     print("")
 ########################################
 
-broker_address="192.168.0.2"
 #broker_address="iot.eclipse.org"
 print("creating new instance")
 client = mqtt.Client("Snooper") #create new instance
