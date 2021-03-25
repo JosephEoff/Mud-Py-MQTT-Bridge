@@ -33,12 +33,12 @@ def on_node_message(client, userdata, message):
             client.publish(node +'/' + fields.ID + '/' + nodeSensor,ID)
     #Nodes will always send a battery message before a nodeDone, so there's no need to create the node in the database
     if fields.DataType == nodeDone:        
-        client.publish(node + '/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour())
+        client.publish(node + '/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour() + 1800) #On the half hour
         
 def _getSecondsToNextHour():
     delta = datetime.timedelta(hours=1)
     now = datetime.datetime.now()
-    next_hour = (now + delta).replace(microsecond=0, second=0, minute=30)
+    next_hour = (now + delta).replace(microsecond=0, second=0, minute=0)
 
     return (next_hour - now).seconds   
     
