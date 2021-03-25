@@ -3,10 +3,10 @@ import paho.mqtt.client as mqtt #import the client1
 import time
 import mud_py_API as MudPy
 import datetime
-
+import local_settings as cfg
 
 topicFieldSeparator = '/'
-broker_address="192.168.0.2" #Address needs to be a configuration setting.
+broker_address=cfg.broker_address
 
 nodeSubscription = 'mud-py-node/+/+'
 sensorSubscription = 'mud-py-flora/+/+'
