@@ -79,7 +79,7 @@ def getSensorIDsForNode(nodeID):
 def updateSensorData(id,dataType, value):
     dtype = _getSensorDataType(dataType)
     sensor = _getSensor(id)
-    data = SensorData(sensor = sensor, datatype = dtype, timestamp = timezone.now(), value = value)
+    data = SensorData(sensor = sensor, zone = sensor.zone, location = sensor.location, datatype = dtype, timestamp = timezone.now(), value = value)
     data.save()
         
 def _getSensor(id):
