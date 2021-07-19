@@ -56,6 +56,10 @@ def _getUnitForNodeDataType(dataType):
     if dataType == 'battery':
         dUnitName ='volts'
         dUnitSymbol = 'V'
+        
+    if dataType == 'rssi':
+        dUnitName ='dBm'
+        dUnitSymbol = 'dBm'
     
     dUnit = None
     
@@ -127,6 +131,9 @@ def _getUnitForSensorDataType(dataType):
     if dataType == 'readtries':
         dUnitName ='count'
         dUnitSymbol = 'ct'
+    if dataType == 'rssi':
+        dUnitName ='dBm'
+        dUnitSymbol = 'dBm'
     
     dUnit = None
     
