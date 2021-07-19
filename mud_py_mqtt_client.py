@@ -26,16 +26,17 @@ def on_message(client, userdata, message):
 def on_node_message(client, userdata, message):
     fields = splitTopicToFields(message.topic)
     
-    #Nodes will always send a battery message before a nodeDone, so there's no need to create the node in the database for other messages.
-    if fields.DataType == nodeDone:        
+    #Nodes will always send a battery message first, so there's no need to create the node in the database for other messages.
+    if fields.DataType == nodeDone:
         client.publish(node + '/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour() + 1800) #On the half hour
         return
-    
-    MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
+   
     if fields.DataType == nodeBattery:             
         sensorIDs = MudPy.getSensorIDsForNode(fields.ID)
         for ID in sensorIDs:
             client.publish(node +'/' + fields.ID + '/' + nodeSensor,ID)
+    
+    MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
         
 def _getSecondsToNextHour():
     delta = datetime.timedelta(hours=1)
