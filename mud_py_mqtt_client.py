@@ -30,13 +30,15 @@ def on_node_message(client, userdata, message):
     if fields.DataType == nodeDone:
         client.publish(node + '/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour() + 1800) #On the half hour
         return
+    
+    MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
    
     if fields.DataType == nodeBattery:             
         sensorIDs = MudPy.getSensorIDsForNode(fields.ID)
         for ID in sensorIDs:
             client.publish(node +'/' + fields.ID + '/' + nodeSensor,ID)
     
-    MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
+    
         
 def _getSecondsToNextHour():
     delta = datetime.timedelta(hours=1)
