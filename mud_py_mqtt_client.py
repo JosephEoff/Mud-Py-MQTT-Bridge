@@ -25,6 +25,7 @@ def on_message(client, userdata, message):
     print("message retain flag=",message.retain)
     
 def on_node_message(client, userdata, message):
+    #The client receives the messages it sends.  Make sure to check the topic before handling a message
     try:        
         fields = splitTopicToFields(message.topic)
         
