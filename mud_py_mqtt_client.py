@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import paho.mqtt.client as mqtt #import the client1
+import paho.mqtt.client as mqtt
 import time
 import mud_py_API as MudPy
 import datetime
@@ -11,6 +11,7 @@ broker_address=cfg.broker_address
 nodeSubscription = 'mud-py-node/+/+'
 sensorSubscription = 'mud-py-flora/+/+'
 nodeBattery = 'battery'
+nodeRSSI = 'rssi'
 nodeDone = 'done'
 nodeSleep = 'sleep'
 nodeSensor = 'sensorID'
@@ -24,20 +25,25 @@ def on_message(client, userdata, message):
     print("message retain flag=",message.retain)
     
 def on_node_message(client, userdata, message):
-    fields = splitTopicToFields(message.topic)
-    
-    #Nodes will always send a battery message first, so there's no need to create the node in the database for other messages.
-    if fields.DataType == nodeDone:
-        client.publish(node + '/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour() + 1800) #On the half hour
-        return
-    
-    MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
-   
-    if fields.DataType == nodeBattery:             
-        sensorIDs = MudPy.getSensorIDsForNode(fields.ID)
-        for ID in sensorIDs:
-            client.publish(node +'/' + fields.ID + '/' + nodeSensor,ID)
-    
+    try:        
+        fields = splitTopicToFields(message.topic)
+        
+        #Nodes will always send a battery message first, so there's no need to create the node in the database for other messages.
+        if fields.DataType == nodeDone:
+            client.publish(node + '/' + fields.ID + '/' + nodeSleep,_getSecondsToNextHour() + 1800) #On the half hour
+            return
+        
+        if fields.DataType == nodeRSSI :
+            MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
+ 
+        if fields.DataType == nodeBattery:   
+            MudPy.updateNodeData(fields.ID, fields.DataType, str(message.payload.decode("utf-8")))
+            sensorIDs = MudPy.getSensorIDsForNode(fields.ID)
+            for ID in sensorIDs:
+                client.publish(node +'/' + fields.ID + '/' + nodeSensor,ID)
+    except Exception as ex:
+        print ('Method "on_node_message" :' + str(ex))
+        print ('Method "on_node_message" :' + str(message.topic) + str(message.payload.decode("utf-8")))
     
         
 def _getSecondsToNextHour():
@@ -48,8 +54,12 @@ def _getSecondsToNextHour():
     return (next_hour - now).seconds   
     
 def on_sensor_message(client, userdata, message):
-    fields = splitTopicToFields(message.topic)
-    MudPy.updateSensorData(fields.ID.upper(), fields.DataType, str(message.payload.decode("utf-8")))
+    try:
+        fields = splitTopicToFields(message.topic)
+        MudPy.updateSensorData(fields.ID.upper(), fields.DataType, str(message.payload.decode("utf-8")))
+    except Exception as ex:
+         print ('Method "on_sensor_message" :' + str(ex))
+         print ('Method "on_sensor_message" :' + str(message.topic) + str(message.payload.decode("utf-8")))
     
 
 def splitTopicToFields(topic):
@@ -76,7 +86,7 @@ client.subscribe(nodeSubscription)
 client.subscribe(sensorSubscription)
 
 while True:
-    time.sleep(4) 
+    time.sleep(0.1) 
     pass
 
 client.loop_stop() #stop the loop
